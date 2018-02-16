@@ -8,26 +8,32 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityView {
+
 
     EditText note;
     TextView characterLeft;
+    MainActivityPresenter mainActivityPresenter;
+    private int setMaxLength = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainActivityPresenter = new MainActivityPresenter(this);
+
         initViews();
         initListeners();
     }
 
-    private void initViews(){
+    private void initViews() {
         note = findViewById(R.id.note);
         characterLeft = findViewById(R.id.characterLeft);
     }
 
-    private void initListeners(){
+
+    private void initListeners() {
         note.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -36,15 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                int length = note.length();
-                String count = String.valueOf(200 - length);
-                characterLeft.setText(count);
-
-                if (length == 200) {
-                    characterLeft.setTextColor(Color.RED);
-                } else {
-                    characterLeft.setTextColor(getResources().getColor(R.color.colorGrey));
-                }
+                int noteLength = note.length();
+                mainActivityPresenter.setCharacterCount(noteLength,setMaxLength);
+                mainActivityPresenter.setLabelColor(noteLength,setMaxLength);
             }
 
             @Override
@@ -52,5 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void updateTextColor(int colorID) {
+        characterLeft.setTextColor(colorID);
+    }
+
+    @Override
+    public void updateCharacterCount(String count) {
+        characterLeft.setText(count);
     }
 }

@@ -18,7 +18,6 @@ public class MainActivityPresenter {
    public void setCharacterCount(int noteLength,int maxLength){
        String count = String.valueOf(maxLength - noteLength);
        view.updateCharacterCount(count);
-       
    }
 
    public void setLabelColor(int noteLength,int maxLength){
